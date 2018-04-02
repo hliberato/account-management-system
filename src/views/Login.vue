@@ -2,13 +2,16 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   29-03-2018
 @Last modified by:   hliberato
-@Last modified time: 30-03-2018
+@Last modified time: 01-04-2018
 -->
 
 <template>
   <div class="md-layout md-alignment-center-center">
     <md-card class="md-layout-item md-size-25 md-small-size-70 md-medium-size-50">
       <md-card-header>
+        <div class="md-logo">
+          <img src="../assets/logo.png">
+        </div>
         <div class="md-title">Account Management System</div>
       </md-card-header>
       <md-card-content>
@@ -23,7 +26,11 @@
       </md-card-content>
       <md-card-actions>
         <md-button @click="submitLogin" class="login-button md-raised md-primary">
-          Login
+          <span v-show="!submit">
+            Login
+          </span>
+          <md-progress-spinner v-show="submit" class="md-accent" :md-diameter="20"
+          :md-stroke="2" md-mode="indeterminate"></md-progress-spinner>
         </md-button>
         {{error}}
       </md-card-actions>
@@ -36,14 +43,12 @@ import firebase from 'firebase';
 
 export default {
   name: 'login',
-  data() {
-    return {
-      email: '',
-      password: '',
-      error: '',
-      submit: false,
-    };
-  },
+  data: () => ({
+    email: '',
+    password: '',
+    error: '',
+    submit: false,
+  }),
   methods: {
     submitLogin() {
       this.submit = true;
@@ -83,5 +88,18 @@ export default {
   .login-button{
     width: 15rem;
     margin-bottom: 1rem !important;
+  }
+  circle{
+    stroke: #fff !important;
+  }
+  .md-logo{
+    text-align: center;
+    padding: 16px 0;
+  }
+  .md-logo img{
+    width: 96px;
+  }
+  .md-card-header{
+    margin-bottom: 16px;
   }
 </style>
