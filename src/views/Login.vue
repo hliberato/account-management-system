@@ -2,7 +2,7 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   29-03-2018
 @Last modified by:   hliberato
-@Last modified time: 01-04-2018
+@Last modified time: 02-04-2018
 -->
 
 <template>
@@ -23,16 +23,18 @@
           <label>Password</label>
           <md-input v-model="password" type="password"></md-input>
         </md-field>
+        <div class="md-error">
+          {{error}}
+        </div>
       </md-card-content>
       <md-card-actions>
         <md-button @click="submitLogin" class="login-button md-raised md-primary">
-          <span v-show="!submit">
+          <label v-show="!submit">
             Login
-          </span>
-          <md-progress-spinner v-show="submit" class="md-accent" :md-diameter="20"
+          </label>
+          <md-progress-spinner v-bind:class="{hidden: !submit}" class="md-accent" :md-diameter="20"
           :md-stroke="2" md-mode="indeterminate"></md-progress-spinner>
         </md-button>
-        {{error}}
       </md-card-actions>
     </md-card>
   </div>
@@ -57,15 +59,9 @@ export default {
       self.response = firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .catch((/* error */) => {
           self.error = 'Email não encontrado ou senha incorreta.';
+          this.submit = false;
         });
     },
-    // ,
-    // current: function () {
-    //   console.log(firebase.auth().currentUser)
-    // },
-    // signOut: function () {
-    //   firebase.auth().signOut()
-    // }
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -76,7 +72,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
   #app, .md-layout {
     min-height: 100%;
     min-width: 100%;
@@ -101,5 +97,12 @@ export default {
   }
   .md-card-header{
     margin-bottom: 16px;
+  }
+  .md-error{
+    color: #ff1744;
+    text-align: center;
+  }
+  .hidden{
+    display: none;
   }
 </style>

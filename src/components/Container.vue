@@ -2,7 +2,7 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   30-03-2018
 @Last modified by:   hliberato
-@Last modified time: 31-03-2018
+@Last modified time: 02-04-2018
 -->
 
 <template>
@@ -27,7 +27,7 @@
       <md-list>
         <md-list-item to="/" @click="menuVisible = !menuVisible">
           <md-icon class="md-primary">supervisor_account</md-icon>
-          <span class="md-list-item-text">Management</span>
+          <span class="md-list-item-text">Users</span>
         </md-list-item>
         <md-list-item to="/logs" @click="menuVisible = !menuVisible">
           <md-icon class="md-primary">list</md-icon>
@@ -49,7 +49,7 @@
 import firebase from 'firebase';
 
 export default {
-  name: 'Header',
+  name: 'Container',
   data: () => ({
     menuVisible: false,
     username: '',

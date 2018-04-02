@@ -2,13 +2,13 @@
  * @Author: Henrique Liberato <hliberato>
  * @Date:   29-03-2018
  * @Last modified by:   hliberato
- * @Last modified time: 31-03-2018
+ * @Last modified time: 02-04-2018
  */
 
 import firebase from 'firebase';
 import Vue from 'vue';
 import Router from 'vue-router';
-import Management from './views/Management.vue';
+import Users from './views/Users.vue';
 import About from './views/About.vue';
 import Login from './views/Login.vue';
 import Log from './views/Log.vue';
@@ -19,8 +19,8 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Management',
-      component: Management,
+      name: 'Users',
+      component: Users,
       meta: {
         requiresAuth: true,
       },
