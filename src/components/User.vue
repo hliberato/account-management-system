@@ -53,8 +53,8 @@
             <md-button class="md-accent" @click="showDialog = false">Close</md-button>
           </md-card-actions>
         </md-card>
-        <md-snackbar :md-active.sync="userSaved">
-          The user {{ lastUser }} was saved with success!
+        <md-snackbar :md-active.sync="userCreated" :md-duration="8000">
+          The user {{ lastUser }} was created with success!
         </md-snackbar>
       </form>
     </md-dialog>
@@ -78,7 +78,7 @@ export default {
       lastName: null,
       email: null,
     },
-    userSaved: false,
+    userCreated: false,
     sending: false,
     lastUser: null,
   }),
@@ -114,22 +114,26 @@ export default {
       this.form.lastName = null;
       this.form.email = null;
     },
-    saveUser() {
+    createUser() {
       this.sending = true;
 
-      // Instead of this timeout, here you can call your API
-      window.setTimeout(() => {
+      this.$root.db.ref('users').push({
+        firstName: this.form.firstName,
+        lastName: this.form.lastName,
+        email: this.form.email,
+      }, () => {
         this.lastUser = `${this.form.firstName} ${this.form.lastName}`;
-        this.userSaved = true;
+        this.userCreated = true;
         this.sending = false;
+        this.$store.commit('hideUserDialog');
         this.clearForm();
-      }, 1500);
+      });
     },
     validateUser() {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        this.saveUser();
+        this.createUser();
       }
     },
   },

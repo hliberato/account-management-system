@@ -32,7 +32,7 @@
           <label v-show="!submit">
             Login
           </label>
-          <md-progress-spinner v-bind:class="{hidden: !submit}" class="md-accent" :md-diameter="20"
+          <md-progress-spinner v-bind:class="{hidden: !submit}" :md-diameter="20"
           :md-stroke="2" md-mode="indeterminate"></md-progress-spinner>
         </md-button>
       </md-card-actions>
@@ -57,7 +57,7 @@ export default {
       const self = this;
       self.error = '';
       self.response = firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-        .catch((/* error */) => {
+        .catch(() => {
           self.error = 'Email não encontrado ou senha incorreta.';
           this.submit = false;
         });
@@ -85,9 +85,6 @@ export default {
     width: 15rem;
     margin-bottom: 1rem !important;
   }
-  circle{
-    stroke: #fff !important;
-  }
   .md-logo{
     text-align: center;
     padding: 16px 0;
@@ -104,5 +101,10 @@ export default {
   }
   .hidden{
     display: none;
+  }
+</style>
+<style>
+  circle{
+    stroke: #fff !important;
   }
 </style>

@@ -2,11 +2,11 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   29-03-2018
 @Last modified by:   hliberato
-@Last modified time: 30-03-2018
+@Last modified time: 02-04-2018
 -->
 
 <template>
-  <div>
+  <Container>
     <md-table v-model='searched' md-sort='name' md-sort-order='asc' md-fixed-header>
       <md-table-toolbar>
         <div class='md-toolbar-section-start'>
@@ -32,22 +32,26 @@
         <md-table-cell md-label='Job Title' md-sort-by='title'>{{ item.title }}</md-table-cell>
       </md-table-row>
     </md-table>
-  </div>
+  </Container>
 </template>
 
 <script>
+import Container from '@/components/Container.vue';
+
 const toLower = text => text.toString().toLowerCase();
 
 const searchByName = (items, term) => {
   if (term) {
     return items.filter(item => toLower(item.name).includes(toLower(term)));
   }
-
   return items;
 };
 
 export default {
   name: 'Log',
+  components: {
+    Container,
+  },
   data: () => ({
     search: null,
     searched: [],
