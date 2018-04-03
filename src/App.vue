@@ -2,7 +2,7 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   29-03-2018
 @Last modified by:   hliberato
-@Last modified time: 02-04-2018
+@Last modified time: 03-04-2018
 -->
 
 <template>
@@ -18,4 +18,9 @@
   accent: md-get-palette-color(bluegrey, 500)
 ));
 @import "~vue-material/dist/theme/all";
+#app {
+  min-height: 100%;
+  min-width: 100%;
+  position: absolute;
+}
 </style>
