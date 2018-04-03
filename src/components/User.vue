@@ -12,34 +12,28 @@
       <form novalidate class="md-layout" @submit.prevent="validateUser">
         <md-card class="md-layout-item md-small-size-100">
           <md-card-content>
-            <div class="md-layout md-gutter">
-              <div class="md-layout-item md-small-size-100">
-                <md-field :class="getValidationClass('firstName')">
-                  <label for="first-name">First Name</label>
-                  <md-input name="first-name" id="first-name" autocomplete="given-name"
-                  v-model="form.firstName" :disabled="sending" />
-                  <span class="md-error" v-if="!$v.form.firstName.required">
-                    The first name is required
+                <md-field :class="getValidationClass('name')">
+                  <label for="fname">Name</label>
+                  <md-input name="name" id="name" autocomplete="given-name"
+                  v-model="form.name" :disabled="sending" />
+                  <span class="md-error" v-if="!$v.form.name.required">
+                    Name is required
                   </span>
-                  <span class="md-error" v-else-if="!$v.form.firstName.minlength">
-                    Invalid first name
+                  <span class="md-error" v-else-if="!$v.form.name.minlength">
+                    Invalid name
                   </span>
                 </md-field>
-              </div>
-              <div class="md-layout-item md-small-size-100">
-                <md-field :class="getValidationClass('lastName')">
-                  <label for="last-name">Last Name</label>
-                  <md-input name="last-name" id="last-name" autocomplete="family-name"
-                  v-model="form.lastName" :disabled="sending" />
-                  <span class="md-error" v-if="!$v.form.lastName.required">
-                    The last name is required
+                <md-field :class="getValidationClass('phone')">
+                  <label for="phone">Phone</label>
+                  <md-input name="phone" id="phone" autocomplete="family-name"
+                  v-model="form.phone" :disabled="sending" />
+                  <span class="md-error" v-if="!$v.form.phone.required">
+                    Phone is required
                   </span>
-                  <span class="md-error" v-else-if="!$v.form.lastName.minlength">
-                    Invalid last name
+                  <span class="md-error" v-else-if="!$v.form.phone.minlength">
+                    Invalid phone
                   </span>
                 </md-field>
-              </div>
-            </div>
             <md-field :class="getValidationClass('email')">
               <label for="email">Email</label>
               <md-input type="email" name="email" id="email" autocomplete="email"
@@ -50,11 +44,19 @@
           </md-card-content>
           <md-progress-bar md-mode="indeterminate" v-if="sending" />
           <md-card-actions>
-            <md-button type="submit" class="md-primary" :disabled="sending">Create user</md-button>
+            <md-button v-if="!userToEdit" type="submit" class="md-primary" :disabled="sending">
+              Create user
+            </md-button>
+            <md-button v-if="userToEdit" type="submit" class="md-primary" :disabled="sending">
+              Edit user
+            </md-button>
             <md-button class="md-accent" @click="showDialog = false">Close</md-button>
           </md-card-actions>
         </md-card>
-        <md-snackbar :md-active.sync="userCreated" :md-duration="8000">
+        <md-snackbar :md-active.sync="userCreated" :md-duration="6000">
+          The user {{ lastUser }} was created with success!
+        </md-snackbar>
+        <md-snackbar :md-active.sync="userEdited" :md-duration="6000">
           The user {{ lastUser }} was created with success!
         </md-snackbar>
       </form>
@@ -75,27 +77,28 @@ export default {
   mixins: [validationMixin],
   data: () => ({
     form: {
-      firstName: null,
-      lastName: null,
+      name: null,
       email: null,
+      phone: null,
     },
     userCreated: false,
+    userEdited: false,
     sending: false,
     lastUser: null,
   }),
   validations: {
     form: {
-      firstName: {
-        required,
-        minLength: minLength(3),
-      },
-      lastName: {
+      name: {
         required,
         minLength: minLength(3),
       },
       email: {
         required,
         email,
+      },
+      phone: {
+        required,
+        minLength: minLength(3),
       },
     },
   },
@@ -111,20 +114,33 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.form.firstName = null;
-      this.form.lastName = null;
+      this.form.name = null;
+      this.form.phone = null;
       this.form.email = null;
     },
     createUser() {
       this.sending = true;
-
       this.$root.db.ref('users').push({
-        firstName: this.form.firstName,
-        lastName: this.form.lastName,
+        name: this.form.name,
+        phone: this.form.phone,
         email: this.form.email,
       }, () => {
-        this.lastUser = `${this.form.firstName} ${this.form.lastName}`;
+        this.lastUser = `${this.form.name}`;
         this.userCreated = true;
+        this.sending = false;
+        this.$store.commit('hideUserDialog');
+        this.clearForm();
+      });
+    },
+    editUser() {
+      this.sending = true;
+      this.$root.db.ref('users').child(this.userToEdit['.key']).update({
+        name: this.form.name,
+        phone: this.form.phone,
+        email: this.form.email,
+      }, () => {
+        this.lastUser = `${this.form.name}`;
+        this.userEdited = true;
         this.sending = false;
         this.$store.commit('hideUserDialog');
         this.clearForm();
@@ -134,7 +150,11 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        this.createUser();
+        if (this.userToEdit) {
+          this.editUser();
+        } else {
+          this.createUser();
+        }
       }
     },
   },
@@ -159,10 +179,15 @@ export default {
   watch: {
     userToEdit() {
       if (this.userToEdit) {
-        this.form.firstName = this.userToEdit.firstName;
-        this.form.lastName = this.userToEdit.lastName;
+        this.form.name = this.userToEdit.name;
+        this.form.phone = this.userToEdit.phone;
         this.form.email = this.userToEdit.email;
       } else {
+        this.clearForm();
+      }
+    },
+    showDialog() {
+      if (!this.userToEdit) {
         this.clearForm();
       }
     },

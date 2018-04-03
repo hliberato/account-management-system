@@ -11,15 +11,15 @@
     <md-table>
       <md-table-row>
         <md-table-head>ID</md-table-head>
-        <md-table-head>First Name</md-table-head>
-        <md-table-head>Last Name</md-table-head>
+        <md-table-head>Name</md-table-head>
+        <md-table-head>Phone</md-table-head>
         <md-table-head>Email</md-table-head>
         <md-table-head></md-table-head>
       </md-table-row>
       <md-table-row v-for="user in users" :key="user['.key']">
         <md-table-cell>{{ user['.key'] }}</md-table-cell>
-        <md-table-cell>{{ user.firstName }}</md-table-cell>
-        <md-table-cell>{{ user.lastName }}</md-table-cell>
+        <md-table-cell>{{ user.name }}</md-table-cell>
+        <md-table-cell>{{ user.phone }}</md-table-cell>
         <md-table-cell>{{ user.email }}</md-table-cell>
         <md-table-cell>
           <md-button @click="$store.commit('showEditUserDialog', user);"
@@ -78,7 +78,7 @@ export default {
     },
     removeUser() {
       this.$root.db.ref('users').child(this.userToRemove['.key']).remove();
-      this.lastUserName = this.userToRemove.firstName;
+      this.lastUserName = this.userToRemove.name;
       this.userRemoved = true;
       this.userToRemove = null;
     },
