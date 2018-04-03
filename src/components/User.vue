@@ -2,12 +2,13 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   02-04-2018
 @Last modified by:   hliberato
-@Last modified time: 02-04-2018
+@Last modified time: 03-04-2018
 -->
 <template>
   <div>
     <md-dialog :md-active.sync="showDialog">
-      <md-dialog-title>Create User</md-dialog-title>
+      <md-dialog-title v-if="!userToEdit">Create User</md-dialog-title>
+      <md-dialog-title v-if="userToEdit">Edit User</md-dialog-title>
       <form novalidate class="md-layout" @submit.prevent="validateUser">
         <md-card class="md-layout-item md-small-size-100">
           <md-card-content>
@@ -145,6 +146,25 @@ export default {
       set(userDialog) {
         this.$store.state.userDialog = userDialog;
       },
+    },
+    userToEdit: {
+      get() {
+        return this.$store.state.userToEdit;
+      },
+      set(userToEdit) {
+        this.$store.state.userToEdit = userToEdit;
+      },
+    },
+  },
+  watch: {
+    userToEdit() {
+      if (this.userToEdit) {
+        this.form.firstName = this.userToEdit.firstName;
+        this.form.lastName = this.userToEdit.lastName;
+        this.form.email = this.userToEdit.email;
+      } else {
+        this.clearForm();
+      }
     },
   },
 };

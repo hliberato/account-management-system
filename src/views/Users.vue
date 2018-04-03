@@ -2,12 +2,12 @@
 @Author: Henrique Liberato <hliberato>
 @Date:   29-03-2018
 @Last modified by:   hliberato
-@Last modified time: 02-04-2018
+@Last modified time: 03-04-2018
 -->
 
 <template>
   <Container>
-    <h1 class='md-title'>Management Logs</h1>
+    <h1 class='md-title'>Users Management</h1>
     <md-table>
       <md-table-row>
         <md-table-head>ID</md-table-head>
@@ -22,7 +22,8 @@
         <md-table-cell>{{ user.lastName }}</md-table-cell>
         <md-table-cell>{{ user.email }}</md-table-cell>
         <md-table-cell>
-          <md-button class="md-icon-button md-primary">
+          <md-button @click="$store.commit('showEditUserDialog', user);"
+          class="md-icon-button md-primary">
             <md-icon>create</md-icon>
           </md-button>
           <md-button @click="removeUserDialog(user)" class="md-icon-button md-primary">
@@ -31,7 +32,8 @@
         </md-table-cell>
       </md-table-row>
     </md-table>
-    <md-button @click="$store.commit('showUserDialog')" class="md-fab md-plain md-fab-bottom-right">
+    <md-button @click="$store.commit('showCreateUserDialog');"
+    class="md-fab md-plain md-fab-bottom-right">
       <md-icon>add</md-icon>
     </md-button>
     <User></User>
