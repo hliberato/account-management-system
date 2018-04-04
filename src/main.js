@@ -2,7 +2,7 @@
  * @Author: Henrique Liberato <hliberato>
  * @Date:   29-03-2018
  * @Last modified by:   hliberato
- * @Last modified time: 02-04-2018
+ * @Last modified time: 03-04-2018
  */
 
 import VueMaterial from 'vue-material';
@@ -10,6 +10,7 @@ import 'vue-material/dist/vue-material.min.css';
 import 'vue-material/dist/theme/default.css';
 import Vuelidate from 'vuelidate';
 import Vue from 'vue';
+import moment from 'moment';
 import firebase from 'firebase';
 import VueFire from 'vuefire';
 import App from './App.vue';
@@ -20,6 +21,11 @@ Vue.use(Vuelidate);
 Vue.use(VueFire);
 Vue.use(VueMaterial);
 Vue.config.productionTip = false;
+
+Vue.filter('formatDate', (value) => {
+  if (!value) return '';
+  return moment(value).format('MM/DD/YY HH:mm');
+});
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDBQfeAOCyAwc-etrf_nRSq1qonDPs9shA',

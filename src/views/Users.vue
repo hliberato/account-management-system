@@ -45,7 +45,7 @@
       @md-cancel="confirmRemoveDialog = false"
       @md-confirm="removeUser"/>
     <md-snackbar :md-active.sync="userRemoved" :md-duration="8000">
-      The user {{ lastUserName }} was removed with success!
+      The user {{ userName }} was removed with success!
     </md-snackbar>
   </Container>
 </template>
@@ -59,7 +59,7 @@ export default {
   data: () => ({
     confirmRemoveDialog: false,
     userToRemove: null,
-    lastUserName: null,
+    userName: null,
     userRemoved: false,
   }),
   firebase() {
@@ -78,9 +78,16 @@ export default {
     },
     removeUser() {
       this.$root.db.ref('users').child(this.userToRemove['.key']).remove();
-      this.lastUserName = this.userToRemove.name;
+      this.userName = this.userToRemove.name;
       this.userRemoved = true;
-      this.userToRemove = null;
+      this.$root.db.ref('users_logs').push({
+        name: this.userToRemove.name,
+        email: this.userToRemove.email,
+        action: 'delete',
+        timestamp: new Date().getTime(),
+      }, () => {
+        this.userToRemove = null;
+      });
     },
   },
 };

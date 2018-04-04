@@ -26,7 +26,7 @@
                 <md-field :class="getValidationClass('phone')">
                   <label for="phone">Phone</label>
                   <md-input name="phone" id="phone" autocomplete="family-name"
-                  v-model="form.phone" :disabled="sending" />
+                  v-model="form.phone" :disabled="sending" type="number"/>
                   <span class="md-error" v-if="!$v.form.phone.required">
                     Phone is required
                   </span>
@@ -129,7 +129,14 @@ export default {
         this.userCreated = true;
         this.sending = false;
         this.$store.commit('hideUserDialog');
-        this.clearForm();
+        this.$root.db.ref('users_logs').push({
+          name: this.form.name,
+          email: this.form.email,
+          action: 'create',
+          timestamp: new Date().getTime(),
+        }, () => {
+          this.clearForm();
+        });
       });
     },
     editUser() {
@@ -143,12 +150,18 @@ export default {
         this.userEdited = true;
         this.sending = false;
         this.$store.commit('hideUserDialog');
-        this.clearForm();
+        this.$root.db.ref('users_logs').push({
+          name: this.form.name,
+          email: this.form.email,
+          action: 'update',
+          timestamp: new Date().getTime(),
+        }, () => {
+          this.clearForm();
+        });
       });
     },
     validateUser() {
       this.$v.$touch();
-
       if (!this.$v.$invalid) {
         if (this.userToEdit) {
           this.editUser();

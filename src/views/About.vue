@@ -12,7 +12,8 @@
       md-rounded
       md-icon="weekend"
       md-label="An app to code and relax!"
-      md-description="Vue.js plus Webpack, Firebase and Material Design. Nothing to worry about! :)">
+      md-description="Vue.js plus Webpack, Firebase and Material
+      Design. Nothing to worry about! :)">
     </md-empty-state>
   </div>
   </Container>
